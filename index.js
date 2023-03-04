@@ -7,7 +7,7 @@ import { userController, postController } from './controllers/index.js';
 import { checkAuth, handleValidationErrors } from './utils/index.js';
 
 mongoose
-	.connect('mongodb+srv://Akif:Akif1995@cluster0.g6v2zjb.mongodb.net/tweeter')
+	.connect(process.env.MONGODB_URL)
 	.then(() => console.log('db ok'))
 	.catch((err) => console.log(err));
 
@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 app.use(express.json());
 app.use(cors());
-app.use('/upload', express.static('uploads'));
+app.use('/uploads', express.static('uploads'));
 
 app.post('/auth/login', loginValidation, handleValidationErrors, userController.login);
 app.post('/auth/register', registerValidation, handleValidationErrors, userController.register);
@@ -33,7 +33,7 @@ app.get('/auth/me', checkAuth, userController.getMe);
 
 app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
 	res.json({
-		url: `/uploads/${req.originalname}`,
+		url: `/uploads/${req.file.originalname}`,
 	});
 });
 
@@ -43,7 +43,7 @@ app.post('/posts', checkAuth, postCreateValidation, handleValidationErrors, post
 app.delete('/posts/:id', checkAuth, postController.remove);
 app.patch('/posts/:id', checkAuth, postCreateValidation, handleValidationErrors, postController.update);
 
-app.listen(8080, (err) => {
+app.listen(process.env.PORT || 8080, (err) => {
 	if (err) {
 		return console.log('err', err);
 	}

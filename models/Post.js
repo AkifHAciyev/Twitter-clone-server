@@ -6,7 +6,7 @@ const PostSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		avatarUrl: String,
+		imageUrl: String,
 		comentCount: {
 			type: Number,
 			default: 0,
