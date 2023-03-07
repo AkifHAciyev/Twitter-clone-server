@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import { validationResult } from 'express-validator';
 import bcrypt from 'bcrypt';
 import UserModel from '../models/User.js';
 
@@ -13,6 +12,8 @@ export const register = async (req, res) => {
 			email: req.body.email,
 			fullName: req.body.fullName,
 			avatarUrl: req.body.avatarUrl,
+			following: req.body.following,
+			followers: req.body.followers,
 			passwordHash: hash,
 		});
 

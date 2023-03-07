@@ -16,6 +16,9 @@ const UserSchema = new mongoose.Schema(
 			required: true,
 		},
 		avatarUrl: String,
+		following: String,
+		followers: String,
+		confirmCode: String,
 	},
 	{
 		timestamps: true,
