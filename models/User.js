@@ -16,6 +16,7 @@ const UserSchema = new mongoose.Schema(
 			required: true,
 		},
 		avatarUrl: String,
+		coverUrl: String,
 		following: String,
 		followers: String,
 		confirmCode: String,

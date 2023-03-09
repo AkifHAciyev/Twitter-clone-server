@@ -30,6 +30,8 @@ app.use('/uploads', express.static('uploads'));
 app.post('/auth/login', loginValidation, handleValidationErrors, userController.login);
 app.post('/auth/register', registerValidation, handleValidationErrors, userController.register);
 app.get('/auth/me', checkAuth, userController.getMe);
+app.put('/users/:id/avatarUrl', checkAuth, userController.UpdateAvaratUrl);
+app.put('/users/:id/coverUrl', checkAuth, userController.UpdateCovertUrl);
 
 app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
 	res.json({
