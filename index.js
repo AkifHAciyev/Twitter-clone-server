@@ -29,6 +29,7 @@ app.use('/uploads', express.static('uploads'));
 
 app.post('/auth/login', loginValidation, handleValidationErrors, userController.login);
 app.post('/auth/register', registerValidation, handleValidationErrors, userController.register);
+app.post('/users/:userId/save-post/:postId', userController.savePost);
 app.get('/auth/me', checkAuth, userController.getMe);
 app.put('/users/:id/avatarUrl', checkAuth, userController.UpdateAvaratUrl);
 app.put('/users/:id/coverUrl', checkAuth, userController.UpdateCovertUrl);

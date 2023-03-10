@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const UserSchema = new mongoose.Schema(
 	{
@@ -17,9 +17,25 @@ const UserSchema = new mongoose.Schema(
 		},
 		avatarUrl: String,
 		coverUrl: String,
-		following: String,
-		followers: String,
+		followers: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: 'User',
+			},
+		],
+		following: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: 'User',
+			},
+		],
 		confirmCode: String,
+		savedPosts: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: 'Post',
+			},
+		],
 	},
 	{
 		timestamps: true,
