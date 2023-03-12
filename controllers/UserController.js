@@ -192,6 +192,32 @@ export const UpdateCovertUrl = async (req, res) => {
 	}
 };
 
+export const UpdateBio = async (req, res) => {
+	try {
+		const user = await UserModel.findById(req.params.id);
+
+		if (!user) {
+			return res.status(404).json({
+				message: 'User not found',
+			});
+		}
+
+		user.bio = req.body.bio;
+
+		await user.save();
+
+		const { passwordHash, ...userData } = user._doc;
+
+		res.json(userData);
+	} catch (err) {
+		console.log(err);
+
+		res.status(500).json({
+			message: 'Failed to update image URL',
+		});
+	}
+};
+
 export const savePost = async (req, res) => {
 	const { userId, postId } = req.params;
 	try {
@@ -214,5 +240,74 @@ export const savePost = async (req, res) => {
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ message: 'Server error' });
+	}
+};
+
+export const likes = async (req, res) => {
+	const { userId, postId } = req.params;
+	try {
+		const user = await UserModel.findById(userId);
+		const post = await PostModel.findById(postId);
+		if (!user || !post) {
+			return res.status(404).json({ message: 'User or post not found' });
+		}
+
+		const postIndex = user.likes.indexOf(postId);
+		if (postIndex === -1) {
+			user.likes.push(postId);
+		} else {
+			user.likes.splice(postIndex, 1);
+		}
+
+		await user.save();
+
+		res.json({ message: 'Post saved successfully' });
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: 'Server error' });
+	}
+};
+
+export const getPosts = async (req, res) => {
+	try {
+		const user = await UserModel.findById(req.params.userId).populate('savedPosts');
+		if (!user) {
+			return res.status(404).json({ message: 'User not found' });
+		}
+		res.json(user.savedPosts);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: 'Server Error' });
+	}
+};
+export const following = async (req, res) => {
+	if (req.params.id !== req.body.userDataId) {
+		const user = await UserModel.findById(req.params.id);
+		const otheruser = await UserModel.findById(req.body.userDataId);
+		console.log(req.params.id);
+		if (!user.Followers.includes(req.body.userDataId)) {
+			await user.updateOne({ $push: { Followers: req.body.userDataId } });
+			await otheruser.updateOne({ $push: { Following: req.params.id } });
+			return res.status(200).json({ message: 'User has followed' });
+		} else {
+			return res.status(400).json({ message: 'You already follow this user' });
+		}
+	} else {
+		res.status(400).json({ message: 'You can not follow yourself' });
+	}
+};
+
+export const myFollowers = async (req, res) => {
+	try {
+		const user = await UserModel.findById(req.params.id);
+		const followersPost = await Promise.all(
+			user.Following.map((item) => {
+				return PostModel.find({ user: item });
+			})
+		);
+		res.status(200).json(followersPost);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: 'Server Error' });
 	}
 };

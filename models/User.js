@@ -17,18 +17,7 @@ const UserSchema = new mongoose.Schema(
 		},
 		avatarUrl: String,
 		coverUrl: String,
-		followers: [
-			{
-				type: Schema.Types.ObjectId,
-				ref: 'User',
-			},
-		],
-		following: [
-			{
-				type: Schema.Types.ObjectId,
-				ref: 'User',
-			},
-		],
+		bio: String,
 		confirmCode: String,
 		savedPosts: [
 			{
@@ -36,6 +25,18 @@ const UserSchema = new mongoose.Schema(
 				ref: 'Post',
 			},
 		],
+		likes: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: 'Post',
+			},
+		],
+		Followers: {
+			type: Array,
+		},
+		Following: {
+			type: Array,
+		},
 	},
 	{
 		timestamps: true,

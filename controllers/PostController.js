@@ -16,6 +16,8 @@ export const getAll = async (req, res) => {
 export const getOne = async (req, res) => {
 	try {
 		const postId = req.params.id;
+		console.log(postId);
+
 		PostModel.findByIdAndUpdate(
 			{
 				_id: postId,
@@ -123,6 +125,27 @@ export const update = async (req, res) => {
 
 		res.status(500).json({
 			message: 'Failed to create post',
+		});
+	}
+};
+
+export const comments = async (req, res) => {
+	try {
+		const { comment, postId } = req.body;
+		const comments = {
+			user: req.user.id,
+			username: req.user.username,
+			comment,
+		};
+		const post = await PostModel.findById(postId);
+		post.comments.push(comments);
+		await post.save();
+		res.status(200).json(post);
+	} catch (err) {
+		console.log(err);
+
+		res.status(500).json({
+			message: 'Failed to comment post',
 		});
 	}
 };

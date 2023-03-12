@@ -29,10 +29,15 @@ app.use('/uploads', express.static('uploads'));
 
 app.post('/auth/login', loginValidation, handleValidationErrors, userController.login);
 app.post('/auth/register', registerValidation, handleValidationErrors, userController.register);
-app.post('/users/:userId/save-post/:postId', userController.savePost);
+app.post('/users/:userId/save-post/:postId', checkAuth, userController.savePost);
+app.post('/users/:userId/like-post/:postId', checkAuth, userController.likes);
+app.get('/users/:userId/save-post', userController.getPosts);
 app.get('/auth/me', checkAuth, userController.getMe);
 app.put('/users/:id/avatarUrl', checkAuth, userController.UpdateAvaratUrl);
 app.put('/users/:id/coverUrl', checkAuth, userController.UpdateCovertUrl);
+app.put('/users/:id/bio', checkAuth, userController.UpdateBio);
+app.put('/users/following/:id', checkAuth, userController.following);
+app.get('/users/flw/:id', userController.myFollowers);
 
 app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
 	res.json({
@@ -45,6 +50,7 @@ app.get('/posts/:id', postController.getOne);
 app.post('/posts', checkAuth, postCreateValidation, handleValidationErrors, postController.create);
 app.delete('/posts/:id', checkAuth, postController.remove);
 app.patch('/posts/:id', checkAuth, postCreateValidation, handleValidationErrors, postController.update);
+app.put('/posts/:id/comment', postController.comments);
 
 app.listen(8080, (err) => {
 	if (err) {
