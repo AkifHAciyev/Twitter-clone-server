@@ -29,10 +29,12 @@ app.use('/uploads', express.static('uploads'));
 
 app.post('/auth/login', loginValidation, handleValidationErrors, userController.login);
 app.post('/auth/register', registerValidation, handleValidationErrors, userController.register);
+app.get('/auth/me', checkAuth, userController.getMe);
+
 app.post('/users/:userId/save-post/:postId', checkAuth, userController.savePost);
 app.post('/users/:userId/like-post/:postId', checkAuth, userController.likes);
 app.get('/users/:userId/save-post', userController.getPosts);
-app.get('/auth/me', checkAuth, userController.getMe);
+app.get('/users', userController.getAllUsers);
 app.put('/users/:id/avatarUrl', checkAuth, userController.UpdateAvaratUrl);
 app.put('/users/:id/coverUrl', checkAuth, userController.UpdateCovertUrl);
 app.put('/users/:id/bio', checkAuth, userController.UpdateBio);

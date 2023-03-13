@@ -15,6 +15,19 @@ const transporter = nodemailer.createTransport({
 	secure: true,
 });
 
+export const getAllUsers = async (req, res) => {
+	try {
+		const users = await UserModel.find().exec();
+		res.json(users);
+	} catch (err) {
+		console.log(err);
+
+		res.status(500).json({
+			message: 'Failed to find users',
+		});
+	}
+};
+
 export const register = async (req, res) => {
 	try {
 		const password = req.body.password;
@@ -289,6 +302,7 @@ export const following = async (req, res) => {
 			await user.updateOne({ $push: { Followers: req.body.userDataId } });
 			await otheruser.updateOne({ $push: { Following: req.params.id } });
 			return res.status(200).json({ message: 'User has followed' });
+		} else if (req.params.id !== req.body.userDataId) {
 		} else {
 			return res.status(400).json({ message: 'You already follow this user' });
 		}
