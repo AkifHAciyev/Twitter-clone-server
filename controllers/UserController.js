@@ -206,9 +206,10 @@ export const UpdateCovertUrl = async (req, res) => {
 };
 
 export const UpdateBio = async (req, res) => {
+	console.log(req.params.id);
 	try {
 		const user = await UserModel.findById(req.params.id);
-
+		console.log(user);
 		if (!user) {
 			return res.status(404).json({
 				message: 'User not found',
@@ -297,17 +298,31 @@ export const following = async (req, res) => {
 	if (req.params.id !== req.body.userDataId) {
 		const user = await UserModel.findById(req.params.id);
 		const otheruser = await UserModel.findById(req.body.userDataId);
-		console.log(req.params.id);
 		if (!user.Followers.includes(req.body.userDataId)) {
 			await user.updateOne({ $push: { Followers: req.body.userDataId } });
 			await otheruser.updateOne({ $push: { Following: req.params.id } });
 			return res.status(200).json({ message: 'User has followed' });
-		} else if (req.params.id !== req.body.userDataId) {
 		} else {
 			return res.status(400).json({ message: 'You already follow this user' });
 		}
 	} else {
 		res.status(400).json({ message: 'You can not follow yourself' });
+	}
+};
+
+export const unfollowing = async (req, res) => {
+	if (req.params.id !== req.body.userDataId) {
+		const user = await UserModel.findById(req.params.id);
+		const otheruser = await UserModel.findById(req.body.userDataId);
+		if (user.Followers.includes(req.body.userDataId)) {
+			await user.updateOne({ $pull: { Followers: req.body.userDataId } });
+			await otheruser.updateOne({ $pull: { Following: req.params.id } });
+			return res.status(200).json({ message: 'User has been unfollowed' });
+		} else {
+			return res.status(400).json({ message: 'You are not following this user' });
+		}
+	} else {
+		res.status(400).json({ message: 'You cannot unfollow yourself' });
 	}
 };
 

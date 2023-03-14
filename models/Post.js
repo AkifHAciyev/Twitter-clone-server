@@ -23,13 +23,18 @@ const PostSchema = new mongoose.Schema(
 					type: String,
 					required: true,
 				},
+				avatar: {
+					type: String,
+				},
 				comment: {
 					type: String,
 					required: true,
 				},
-			},
-			{
-				timestamps: true,
+				default: [],
+				createdAt: {
+					type: Date,
+					default: Date.now,
+				},
 			},
 		],
 	},

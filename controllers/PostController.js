@@ -51,39 +51,6 @@ export const getOne = async (req, res) => {
 	}
 };
 
-export const remove = async (req, res) => {
-	try {
-		const postId = req.params.id;
-		PostModel.findOneAndDelete(
-			{
-				_id: postId,
-			},
-			(err, doc) => {
-				if (err) {
-					console.log(err);
-
-					return res.status(500).json({
-						message: 'Failed is not delete',
-					});
-				}
-
-				if (!doc) {
-					return res.status(404).json({
-						message: 'Failed to find posts',
-					});
-				}
-				res.json(doc);
-			}
-		);
-	} catch (err) {
-		console.log(err);
-
-		res.status(500).json({
-			message: 'Failed to find posts',
-		});
-	}
-};
-
 export const create = async (req, res) => {
 	try {
 		const doc = new PostModel({
@@ -131,21 +98,23 @@ export const update = async (req, res) => {
 
 export const comments = async (req, res) => {
 	try {
-		const { comment, postId } = req.body;
+		const { comment, postId, avatar } = req.body;
 		const comments = {
-			user: req.user.id,
-			username: req.user.username,
+			user: req.body.userId,
+			username: req.body.username,
 			comment,
+			avatar,
 		};
 		const post = await PostModel.findById(postId);
+		if (!post) {
+			return res.status(404).json({ message: 'Post not found' });
+		}
 		post.comments.push(comments);
 		await post.save();
 		res.status(200).json(post);
 	} catch (err) {
-		console.log(err);
-
 		res.status(500).json({
-			message: 'Failed to comment post',
+			message: 'Failed to create post',
 		});
 	}
 };

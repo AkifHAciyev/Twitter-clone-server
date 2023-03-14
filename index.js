@@ -39,6 +39,7 @@ app.put('/users/:id/avatarUrl', checkAuth, userController.UpdateAvaratUrl);
 app.put('/users/:id/coverUrl', checkAuth, userController.UpdateCovertUrl);
 app.put('/users/:id/bio', checkAuth, userController.UpdateBio);
 app.put('/users/following/:id', checkAuth, userController.following);
+app.put('/users/unfollowing/:id', checkAuth, userController.unfollowing);
 app.get('/users/flw/:id', userController.myFollowers);
 
 app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
@@ -50,9 +51,8 @@ app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
 app.get('/posts', postController.getAll);
 app.get('/posts/:id', postController.getOne);
 app.post('/posts', checkAuth, postCreateValidation, handleValidationErrors, postController.create);
-app.delete('/posts/:id', checkAuth, postController.remove);
 app.patch('/posts/:id', checkAuth, postCreateValidation, handleValidationErrors, postController.update);
-app.put('/posts/:id/comment', postController.comments);
+app.put('/posts/comments/post', checkAuth, postController.comments);
 
 app.listen(8080, (err) => {
 	if (err) {
