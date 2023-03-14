@@ -35,6 +35,7 @@ app.post('/users/:userId/save-post/:postId', checkAuth, userController.savePost)
 app.post('/users/:userId/like-post/:postId', checkAuth, userController.likes);
 app.get('/users/:userId/save-post', userController.getPosts);
 app.get('/users', userController.getAllUsers);
+app.get('/users/:id', userController.getUser);
 app.put('/users/:id/avatarUrl', checkAuth, userController.UpdateAvaratUrl);
 app.put('/users/:id/coverUrl', checkAuth, userController.UpdateCovertUrl);
 app.put('/users/:id/bio', checkAuth, userController.UpdateBio);
