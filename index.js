@@ -20,6 +20,14 @@ app.use(function (req, res, next) {
 	next();
 });
 
+const corsOptions = {
+	origin: '*',
+	credentials: true,
+	optionSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+
 const storage = multer.diskStorage({
 	destination: (_, __, cb) => {
 		cb(null, 'uploads');
