@@ -31,6 +31,7 @@ const UserSchema = new mongoose.Schema(
 				ref: 'Post',
 			},
 		],
+
 		Followers: {
 			type: Array,
 		},
